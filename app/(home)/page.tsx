@@ -1,6 +1,7 @@
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-const URL = 'https://nomad-movies.nomadcoders.workers.dev/movies'
+export const API_URL = 'https://nomad-movies.nomadcoders.workers.dev/movies'
 
 export const metadata = {
   title: 'Home',
@@ -8,14 +9,22 @@ export const metadata = {
 
 // server component
 async function getMovies() {
-  await new Promise((resolve) => setTimeout(resolve, 5000)) // 5초 대기
+  // await new Promise((resolve) => setTimeout(resolve, 1000))
   console.log('im fetching!')
-  return await fetch(URL).then((response) => response.json())
+  return await fetch(API_URL).then((response) => response.json())
 }
 
 export default async function HomePage() {
   const movies = await getMovies()
-  return <div>{JSON.stringify(movies)}</div>
+  return (
+    <div>
+      {movies.map((movie) => (
+        <li key={movie.id}>
+          <Link href={`/movies/${movie.id}`}>{movie.title}</Link>
+        </li>
+      ))}
+    </div>
+  )
 }
 
 /* react때의 fetch -> API -> client component 
